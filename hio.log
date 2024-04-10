@@ -1,0 +1,7 @@
+error writing "file21550fae430": broken pipe
+error writing "file21550fae430": broken pipe
+    while executing
+"puts -nonewline $fd "[encoding convertto utf-8 $path]\0""
+    (procedure "write_update_index" line 35)
+    invoked from within
+"write_update_index file21550fae430 {.vs/30004098_FYP/FileContentIndex/09d7d1b4-bedc-4f99-bcf2-624fe591b50a.vsidx .vs/30004098_FYP/FileContentIndex/2c2..."
