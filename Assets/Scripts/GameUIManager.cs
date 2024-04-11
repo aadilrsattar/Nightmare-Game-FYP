@@ -1,14 +1,16 @@
+using Mirror;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class GameUIManager : MonoBehaviour
+public class GameUIManager : NetworkBehaviour
 {
     [SerializeField] private TextMeshProUGUI timerText; // Assign in the inspector
     [SerializeField] private GameObject scoreEntryPrefab; // Prefab for a score entry
     [SerializeField] private Transform scoresPanel; // Parent transform for score entries
 
-    private float timeRemaining = 300f; // 5 minutes in seconds
+    [SyncVar(hook = nameof(OnTimeRemainingChanged))]
+    private float timeRemaining = 300f; // 5 minutes in seconds, synced across clients
 
     // Dictionary to keep track of score entries for quick access
     private Dictionary<uint, TextMeshProUGUI> playerScoreEntries = new Dictionary<uint, TextMeshProUGUI>();
@@ -23,18 +25,10 @@ public class GameUIManager : MonoBehaviour
         ScoresManager.OnScoreUpdated -= UpdateScoresDisplay;
     }
 
-    void Start()
+    // Hook method called when timeRemaining changes
+    void OnTimeRemainingChanged(float oldTime, float newTime)
     {
-        UpdateTimerDisplay(timeRemaining); // Initialize timer display
-    }
-
-    void Update()
-    {
-        if (timeRemaining > 0)
-        {
-            timeRemaining -= Time.deltaTime;
-            UpdateTimerDisplay(timeRemaining);
-        }
+        UpdateTimerDisplay(newTime);
     }
 
     private void UpdateTimerDisplay(float timeInSeconds)
@@ -44,6 +38,17 @@ public class GameUIManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(timeInSeconds % 60);
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
+
+
+    [ServerCallback]
+    void Update()
+    {
+        if (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+        }
+    }
+
 
     public void UpdateScoresDisplay(uint playerId, int newScore)
     {

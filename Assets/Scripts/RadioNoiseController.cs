@@ -28,9 +28,6 @@ public class RadioNoiseController : MonoBehaviour
         }
         if (ghostTransform == null) return;
 
-
-        if (itemSwitch == null) return;Debug.Log(itemSwitch.GetActiveItemIndex());
-
         if (itemSwitch != null && itemSwitch.GetActiveItemIndex() == 2) // Assuming the radio is at index 1
         {
             AdjustVolumeBasedOnDistance();
