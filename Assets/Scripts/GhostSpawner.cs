@@ -33,14 +33,20 @@ public class GhostSpawner : NetworkBehaviour
 
     }
 
-    public void ResetRoomTriggers()
+    [Server]
+    private void SpawnGhost()
     {
-        foreach (RoomTrigger trigger in roomTriggers)
-        {
-            trigger.ResetTriggerState();
-        }
+        Debug.Log("Attempting to spawn ghost");
+
+        if (activeGhosts.Count >= maxGhosts || spawnPoints.Count == 0) return;
+
+        int spawnPointIndex = Random.Range(0, spawnPoints.Count);
+        GameObject ghost = Instantiate(ghostPrefab, spawnPoints[spawnPointIndex].position, Quaternion.identity);
+        NetworkServer.Spawn(ghost);
+        activeGhosts.Add(ghost);
     }
 
+    [Server]
     public void OnGhostCaught()
     {
         if (activeGhosts.Count > 0)
@@ -58,18 +64,7 @@ public class GhostSpawner : NetworkBehaviour
         }
     }
 
-    [Server]
-    private void SpawnGhost()
-    {
-        Debug.Log("Attempting to spawn ghost");
 
-        if (activeGhosts.Count >= maxGhosts || spawnPoints.Count == 0) return;
-
-        int spawnPointIndex = Random.Range(0, spawnPoints.Count);
-        GameObject ghost = Instantiate(ghostPrefab, spawnPoints[spawnPointIndex].position, Quaternion.identity);
-        NetworkServer.Spawn(ghost);
-        activeGhosts.Add(ghost);
-    }
 
     private void YeetAndRemoveGhost(GameObject ghost)
     {
@@ -103,8 +98,8 @@ public class GhostSpawner : NetworkBehaviour
         float moveDuration = 5f; // Duration in seconds over which the ghost will move out of the trigger zone
         float startTime = Time.time;
 
-        // Calculate the target position outside of the trigger zone. Adjust as necessary.
-        Vector3 targetPosition = ghost.transform.position + new Vector3(0, 10, 0); // Example: Move 5 units on the Z-axis
+        // Calculate the target position outside of the trigger zone
+        Vector3 targetPosition = ghost.transform.position + new Vector3(0, 10, 0);
 
         while (Time.time < startTime + moveDuration)
         {
@@ -118,21 +113,18 @@ public class GhostSpawner : NetworkBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        // Ensure the ghost hasn't already been destroyed (e.g., by other game logic)
         if (ghost != null)
         {
             Destroy(ghost);
         }
     }
-
-    public void ResetAllRoomTriggers()
+    public void RegisterRoomTrigger(RoomTrigger trigger)
     {
-        foreach (RoomTrigger trigger in roomTriggers)
+        if (!roomTriggers.Contains(trigger))
         {
-            trigger.ResetTriggerState();
+            roomTriggers.Add(trigger);
         }
     }
-
     public void ForceResetTrigger()
     {
         Collider triggerCollider = GetComponent<Collider>();
@@ -143,12 +135,5 @@ public class GhostSpawner : NetworkBehaviour
         }
     }
 
-    public void RegisterRoomTrigger(RoomTrigger trigger)
-    {
-        // Assuming you have a list declared for storing RoomTrigger references
-        if (!roomTriggers.Contains(trigger))
-        {
-            roomTriggers.Add(trigger);
-        }
-    }
+    
 }

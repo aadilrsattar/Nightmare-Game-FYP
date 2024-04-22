@@ -123,20 +123,8 @@ namespace QuickStart
             {
                 CmdCatchGhost(); // Send a command to the server to catch the ghost
                 isActionOnCooldown = true; // Start cooldown on the client side immediately
-                                           // Note: Actual cooldown logic will be handled in the RpcHandleGhostCaught method
             }
         }
-
-        IEnumerator WaitAndHandleGhostCaught()
-        {
-            yield return new WaitForSeconds(15); // Wait for 15 seconds
-
-            ghostSpawner.OnGhostCaught(); // Handle the ghost being caught after the delay
-
-            isActionOnCooldown = false; // Allow the action to be triggered again
-            isNearGhost = false;
-        }
-
 
         // This method is assumed to be called based on proximity detection logic, similar to previous examples
         public void SetIsNearGhost(bool isNear)
@@ -158,19 +146,15 @@ namespace QuickStart
                 }
                 ghostSpawner.OnGhostCaught(); // Notify the GhostSpawner that a ghost has been caught on the server
 
-                // If the ghost removal or disabling happens here, ensure it's properly networked
-                // For example, ghostSpawner could disable the ghost and respawn it as needed
 
-                RpcHandleGhostCaught(); // Call a ClientRpc to handle client-side effects, if necessary
+                RpcHandleGhostCaught(); // Call a ClientRpc to handle client-side effects
             }
         }
 
         [ClientRpc]
         private void RpcHandleGhostCaught()
         {
-            // Handle any client-specific effects here, such as playing animations, sounds,
-            // or showing messages to the player that they caught a ghost
-
+            ghostSpawner.OnGhostCaught(); // Notify the GhostSpawner that a ghost has been caught on the serve
             StartCoroutine(WaitAndReset()); // Start cooldown and potentially reset local player state
         }
 
@@ -181,6 +165,8 @@ namespace QuickStart
             isActionOnCooldown = false; // Allow the action to be triggered again
             isNearGhost = false; // Reset proximity flag
         }
+
+
         [Command]
         private void CmdRequestScores()
         {

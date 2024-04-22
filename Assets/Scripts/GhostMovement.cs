@@ -27,6 +27,12 @@ public class GhostMovement : MonoBehaviour
 
     void Update()
     {
+        EvaluateMovement();
+        HandleAudioAndAnimation();
+    }
+
+    void EvaluateMovement()
+    {
         directionTimer += Time.deltaTime;
         if (directionTimer >= directionChangeInterval)
         {
@@ -53,8 +59,10 @@ public class GhostMovement : MonoBehaviour
             stuckTimer = 0f; // Reset the stuck timer if the ghost is moving
         }
         lastPosition = transform.position; // Update the last known position
+    }
 
-        // Handle walking sound and animation based on speed
+    void HandleAudioAndAnimation()
+    {
         float speed = agent.velocity.magnitude;
         if (speed > 0.1f && !audioSource.isPlaying)
         {

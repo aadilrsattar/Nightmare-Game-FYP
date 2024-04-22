@@ -4,7 +4,7 @@ using Mirror;
 public class NetworkedDoorAnim : NetworkBehaviour
 {
     [SerializeField] private Animator doorAnimator;
-    private bool isOpen = false; // Track the door state
+    private bool isOpen = false; 
 
     void OnTriggerEnter(Collider other)
     {

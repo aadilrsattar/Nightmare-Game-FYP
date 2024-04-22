@@ -4,7 +4,7 @@ using UnityEngine;
 public class ScoresManager : NetworkBehaviour
 {
     public class SyncDictionaryPlayerScores : SyncDictionary<uint, int> { }
-    readonly public SyncDictionaryPlayerScores playerScores = new SyncDictionaryPlayerScores();
+    public SyncDictionaryPlayerScores playerScores = new SyncDictionaryPlayerScores();
 
     // Define an event for score updates.
     public delegate void ScoreUpdateAction(uint playerId, int newScore);
@@ -31,8 +31,6 @@ public class ScoresManager : NetworkBehaviour
         {
             playerScores.Add(playerId, scoreToAdd);
         }
-
-        // Note: The actual update notification to clients is now handled by the callback
     }
 
     // This callback is triggered whenever the SyncDictionary changes.
@@ -52,12 +50,7 @@ public class ScoresManager : NetworkBehaviour
         }
     }
 
-    // ClientRpc to update clients about score changes. This is an alternative method if you want direct updates.
-    [ClientRpc]
-    private void RpcUpdateClientScores(uint playerId, int newScore)
-    {
-        OnScoreUpdated?.Invoke(playerId, newScore);
-    }
+
 
     [Server]
     public void InitializePlayerScore(NetworkConnectionToClient conn, int initialScore)
@@ -69,10 +62,9 @@ public class ScoresManager : NetworkBehaviour
         {
             playerScores.Add(playerId, initialScore);
 
-            // Optionally, notify clients of the new score entry
             RpcUpdateClientScores(playerId, initialScore);
         }
-    }
+    }    
     private void OnRequestScores(NetworkConnection conn, RequestScoresMessage msg)
     {
         foreach (var score in playerScores)
@@ -81,6 +73,16 @@ public class ScoresManager : NetworkBehaviour
             TargetUpdateScore(conn, score.Key, score.Value);
         }
     }
+
+    
+    [ClientRpc]
+    private void RpcUpdateClientScores(uint playerId, int newScore)
+    {
+        OnScoreUpdated?.Invoke(playerId, newScore);
+    }
+
+
+
     [TargetRpc]
     public void TargetUpdateScore(NetworkConnection target, uint playerId, int score)
     {

@@ -115,19 +115,19 @@ public class MainMenu : MonoBehaviour
         Screen.fullScreen = isFullscreen;
     }
 
-    public void QuitGame ()
-    {
-        Debug.Log("Quit");
-        Application.Quit();
-
-    }
-
     public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 
+    public void QuitGame ()
+    {
+        Debug.Log("Quit");
+        Application.Quit();
+
+    }
+    
     public void HostGame()
     {
         networkManager.StartHost();
@@ -138,7 +138,7 @@ public class MainMenu : MonoBehaviour
     {
         if (joinIpAddressInputField != null)
         {
-            networkManager.networkAddress = joinIpAddressInputField.text; // Use the IP address from the input field
+            networkManager.networkAddress = joinIpAddressInputField.text; 
             networkManager.StartClient();
             UnitySceneManager.LoadScene(networkManager.onlineScene);
         }

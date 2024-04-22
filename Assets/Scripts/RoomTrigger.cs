@@ -65,28 +65,4 @@ public class RoomTrigger : MonoBehaviour
         }
     }
 
-    public void ResetTriggerState()
-    {
-        PlayerScript playerScript = FindObjectOfType<PlayerScript>(); // Find the player script in your scene
-        if (playerScript != null)
-        {
-            playerScript.SetIsNearGhost(true);
-
-        }
-        playerInRoom = false;
-        ghostInRoom = false;
-        playerScript.SetIsNearGhost(false);
-        // Any other reset logic...
-    }
-
-    public void ForceResetTrigger()
-    {
-        Collider triggerCollider = GetComponent<Collider>();
-        if (triggerCollider != null)
-        {
-            triggerCollider.enabled = false;
-            triggerCollider.enabled = true;
-        }
-    }
-
 }

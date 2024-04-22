@@ -32,7 +32,7 @@ public class ItemSwitch : NetworkBehaviour
         else if (items.Length > 0)
         {
             // For the first item, force activation to ensure visibility
-            pendingActivation = true; // Ensure the flag is set to trigger activation in InitializeItems
+            pendingActivation = true; 
             ActivateItem(0); // Directly activate the first item
         }
     }
@@ -61,7 +61,6 @@ public class ItemSwitch : NetworkBehaviour
 
         itemsInitialized = true;
 
-        // If activation was pending, activate the appropriate item now
         if (pendingActivation)
         {
             ActivateItem(activeItemIndex);
@@ -81,7 +80,7 @@ public class ItemSwitch : NetworkBehaviour
     [Command]
     public void CmdSwitchItem(int index)
     {
-        activeItemIndex = index; // This will automatically update and trigger the hook for all clients
+        activeItemIndex = index;
     }
 
     void OnActiveItemIndexChanged(int oldIndex, int newIndex)
@@ -92,14 +91,12 @@ public class ItemSwitch : NetworkBehaviour
         }
         else
         {
-            // Mark that an activation is pending until items are initialized
             pendingActivation = true;
         }
     }
 
     private void ActivateItem(int index)
     {
-        // Ensure all items are deactivated before activating the new one
         foreach (GameObject item in items)
         {
             if (item != null) item.SetActive(false);
