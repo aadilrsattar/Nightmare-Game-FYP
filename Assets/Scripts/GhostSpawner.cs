@@ -56,7 +56,6 @@ public class GhostSpawner : NetworkBehaviour
 
             YeetAndRemoveGhost(toRemove);
             ForceResetTrigger();
-
         }
         if (activeGhosts.Count < maxGhosts)
         {

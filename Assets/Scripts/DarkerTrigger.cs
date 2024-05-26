@@ -6,15 +6,15 @@ public class DarkerTrigger : MonoBehaviour
 {
     public PostProcessProfile normalProfile;
     public PostProcessProfile darkerProfile;
-    private PostProcessVolume volume;
+    private PostProcessVolume _volume;
     public float effectDuration = 5f; // Duration of the darker effect in seconds
 
     private void Start()
     {
-        volume = FindObjectOfType<PostProcessVolume>();
-        if (volume != null)
+        _volume = FindObjectOfType<PostProcessVolume>();
+        if (_volume != null)
         {
-            volume.profile = normalProfile;
+            _volume.profile = normalProfile;
         }
         else
         {
@@ -33,8 +33,8 @@ public class DarkerTrigger : MonoBehaviour
 
     IEnumerator ApplyDarkerEffect()
     {
-        volume.profile = darkerProfile;
+        _volume.profile = darkerProfile;
         yield return new WaitForSeconds(effectDuration); // Wait for the effect duration
-        volume.profile = normalProfile; // Revert to the normal profile
+        _volume.profile = normalProfile; // Revert to the normal profile
     }
 }

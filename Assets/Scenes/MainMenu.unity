@@ -798,7 +798,7 @@ MonoBehaviour:
   autoConnectClientBuild: 0
   offlineScene: Assets/Scenes/MainMenu.unity
   onlineScene: Assets/Scenes/MainScene.unity
-  transport: {fileID: 0}
+  transport: {fileID: 280167161}
   networkAddress: localhost
   maxConnections: 100
   disconnectInactiveConnections: 0
@@ -878,7 +878,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 280167154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e416e0486524f0d9580be7e13388f4, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   port: 7777

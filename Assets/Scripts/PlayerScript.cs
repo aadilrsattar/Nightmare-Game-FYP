@@ -135,27 +135,23 @@ namespace QuickStart
         [Command]
         private void CmdCatchGhost()
         {
-            // Assuming the ghost catching logic might involve score increase and
-            // potentially other server-side effects
-            if (isNearGhost) // Ensure isNearGhost or equivalent logic is validated server-side
+            if (isNearGhost)
             {
                 ScoresManager scoresManager = FindObjectOfType<ScoresManager>();
                 if (scoresManager != null)
                 {
                     scoresManager.AddScore(connectionToClient, 1);
                 }
-                ghostSpawner.OnGhostCaught(); // Notify the GhostSpawner that a ghost has been caught on the server
+                ghostSpawner.OnGhostCaught();
 
-
-                RpcHandleGhostCaught(); // Call a ClientRpc to handle client-side effects
+                RpcHandleGhostCaught();
             }
         }
 
         [ClientRpc]
         private void RpcHandleGhostCaught()
         {
-            ghostSpawner.OnGhostCaught(); // Notify the GhostSpawner that a ghost has been caught on the serve
-            StartCoroutine(WaitAndReset()); // Start cooldown and potentially reset local player state
+            StartCoroutine(WaitAndReset());
         }
 
         IEnumerator WaitAndReset()

@@ -10,7 +10,7 @@ public class GameUIManager : NetworkBehaviour
     [SerializeField] private Transform scoresPanel; // Parent transform for score entries
 
     [SyncVar(hook = nameof(OnTimeRemainingChanged))]
-    private float timeRemaining = 300f; // 5 minutes in seconds, synced across clients
+    private float _timeRemaining = 300f; // 5 minutes in seconds, synced across clients
 
     // Dictionary to keep track of score entries for quick access
     private Dictionary<uint, TextMeshProUGUI> playerScoreEntries = new Dictionary<uint, TextMeshProUGUI>();
@@ -43,9 +43,9 @@ public class GameUIManager : NetworkBehaviour
     [ServerCallback]
     void Update()
     {
-        if (timeRemaining > 0)
+        if (_timeRemaining > 0)
         {
-            timeRemaining -= Time.deltaTime;
+            _timeRemaining -= Time.deltaTime;
         }
     }
 
